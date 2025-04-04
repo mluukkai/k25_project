@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - manifests/gateway.yaml
+  - manifests/route.yaml
+  - manifests/configmap.yaml
+  # - manifests/ingress.yaml
+  - manifests/pvc.yaml
+  - manifests/statefulset.yaml
+
+  - todo-app/manifests/deployment.yaml
+  - todo-app/manifests/service.yaml
+
+  - todo-backend/manifests/deployment.yaml
+  - todo-backend/manifests/service.yaml
+
+  - wikipedia/manifests/job.yaml
+
+images:
+  - name: PROJECT/TODO-APP
+    newName: mluukkai/project-todo-app:6
+  - name: PROJECT/TODO-BACKEND
+    newName: mluukkai/project-todo-backend:5
+  - name: PROJECT/WIKIPEDIA
+    newName: mluukkai/project-todo-wikipedia:5

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-todo-backend-dep
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-todo-backend
+  template:
+    metadata:
+      labels:
+        app: project-todo-backend
+    spec:   
+      containers: 
+      - name: todo-app
+        image: PROJECT/TODO-BACKEND
+        env:
+        - name: PORT
+          value: "3001"
+        - name: DB_URL
+          valueFrom:
+            configMapKeyRef:
+              name: project-conf
+              key: DB_URL

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-todo-app-dep
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-todo-app
+  template:
+    metadata:
+      labels:
+        app: project-todo-app
+    spec:
+      volumes:
+        - name: project-share
+          persistentVolumeClaim:
+            claimName: project-claim    
+      containers: 
+      - name: todo-app
+        image: PROJECT/TODO-APP
+        env:
+        - name: PORT
+          value: "3001"
+        - name: TODO_BACKEND_URL
+          valueFrom:
+            configMapKeyRef:
+              name: project-conf
+              key: TODO_BACKEND_URL
+        - name: IMAGE_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: project-conf
+              key: IMAGE_API_URL
+        volumeMounts:
+          - name: project-share
+            mountPath: /app/data
+
