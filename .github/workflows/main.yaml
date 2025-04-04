@@ -43,8 +43,10 @@ jobs:
         run: gcloud auth configure-docker "$REGISTRY"
           
       - name : 'Build and push todo-app'
+        run: echo "APP_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$APP:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
+
+      - name : 'Build and push todo-app'
         run: |
-          echo "APP_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$APP:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
           docker build --tag "$APP_IMAGE_TAG" todo-app
           docker push "$APP_IMAGE_TAG"
       
@@ -57,7 +59,7 @@ jobs:
       - name : 'Build and push todo-wikipedia'
         run: |
           echo "WIKI_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$WIKI:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
-          docker build --tag "$WIKI_IMAGE_TAG" todo-wikipedia
+          docker build --tag "$WIKI_IMAGE_TAG" wikipedia
           docker push "$WIKI_IMAGE_TAG"
 
       - name: Set up Kustomize
