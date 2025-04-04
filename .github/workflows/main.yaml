@@ -42,8 +42,11 @@ jobs:
       - name: 'Set up Docker Buildx'
         run: gcloud auth configure-docker "$REGISTRY"
           
-      - name : 'Build and push todo-app'
-        run: echo "APP_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$APP:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
+      - name : 'Tag names'
+        run: |
+          echo "APP_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$APP:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
+          echo "BACKEND_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BACKEND:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
+          echo "WIKI_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$WIKI:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
 
       - name : 'Build and push todo-app'
         run: |
@@ -52,13 +55,11 @@ jobs:
       
       - name : 'Build and push todo-backend'
         run: |
-          echo "BACKEND_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BACKEND:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
           docker build --tag "$BACKEND_IMAGE_TAG" todo-backend
           docker push "BACKEND_IMAGE_TAG"
 
       - name : 'Build and push todo-wikipedia'
         run: |
-          echo "WIKI_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$WIKI:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
           docker build --tag "$WIKI_IMAGE_TAG" wikipedia
           docker push "$WIKI_IMAGE_TAG"
 
