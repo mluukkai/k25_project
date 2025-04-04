@@ -56,7 +56,7 @@ jobs:
       - name : 'Build and push todo-backend'
         run: |
           docker build --tag "$BACKEND_IMAGE_TAG" todo-backend
-          docker push "BACKEND_IMAGE_TAG"
+          docker push "$BACKEND_IMAGE_TAG"
 
       - name : 'Build and push todo-wikipedia'
         run: |
