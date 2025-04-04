@@ -46,7 +46,7 @@ jobs:
         run: echo "APP_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$APP:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
 
       - name: Build
-        run: docker build --tag "$APP_IMAGE_TAG" .
+        run: docker build --tag "$APP_IMAGE_TAG" todo-app
 
       - name: Publish
         run: docker push "$APP_IMAGE_TAG"
