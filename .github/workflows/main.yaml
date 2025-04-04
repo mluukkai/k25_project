@@ -69,7 +69,7 @@ jobs:
       - name: Deploy
         run: |-
           kustomize edit set image PROJECT/TODO-APP="$APP_IMAGE_TAG"
-          kustomize edit set image PROJECT/TODO-BACKEND="BACKEND_IMAGE_TAG"
+          kustomize edit set image PROJECT/TODO-BACKEND="$BACKEND_IMAGE_TAG"
           kustomize edit set image PROJECT/WIKIPEDIA="$WIKI_IMAGE_TAG"
           kustomize build . | kubectl apply -f -
           kubectl get services -o wide
