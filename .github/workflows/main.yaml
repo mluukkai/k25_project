@@ -51,18 +51,18 @@ jobs:
 
       - name : 'Build and push todo-app'
         run: |
-          docker build --tag "$APP_IMAGE_TAG" todo-app
-          docker push "$APP_IMAGE_TAG"
+          docker build --tag $APP_IMAGE_TAG todo-app
+          docker push $APP_IMAGE_TAG
       
       - name : 'Build and push todo-backend'
         run: |
-          docker build --tag "$BACKEND_IMAGE_TAG" todo-backend
-          docker push "$BACKEND_IMAGE_TAG"
+          docker build --tag $BACKEND_IMAGE_TAG todo-backend
+          docker push $BACKEND_IMAGE_TAG
 
       - name : 'Build and push todo-wikipedia'
         run: |
-          docker build --tag "$WIKI_IMAGE_TAG" wikipedia
-          docker push "$WIKI_IMAGE_TAG"
+          docker build --tag $WIKI_IMAGE_TAG wikipedia
+          docker push $WIKI_IMAGE_TAG
 
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v2.1.0
@@ -75,8 +75,8 @@ jobs:
       
       - name: Deploy
         run: |-
-          kustomize edit set image PROJECT/TODO-APP="$APP_IMAGE_TAG"
-          kustomize edit set image PROJECT/TODO-BACKEND="$BACKEND_IMAGE_TAG"
-          kustomize edit set image PROJECT/WIKIPEDIA="$WIKI_IMAGE_TAG"
+          kustomize edit set image PROJECT/TODO-APP=$APP_IMAGE_TAG
+          kustomize edit set image PROJECT/TODO-BACKEND=$BACKEND_IMAGE_TAG
+          kustomize edit set image PROJECT/WIKIPEDIA=$WIKI_IMAGE_TAG
           kustomize build . | kubectl apply -f -
           kubectl get services -n $NAMESPACE -o wide
