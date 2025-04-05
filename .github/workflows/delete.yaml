@@ -10,8 +10,8 @@ env:
   NAMESPACE: ${{ github.event.ref == 'main' && 'project' || github.event.ref }}
 
 jobs:
-  build-publish-deploy:
-    name: Build, Publish and Deploy
+  cleaup:
+    name: Delete resources
     runs-on: ubuntu-latest
 
     steps:
@@ -38,7 +38,7 @@ jobs:
         uses: imranismail/setup-kustomize@v2.1.0
 
       - name: Deleting namespace
-        run: Deleting all from namespace $NAMESPACE
+        run: echo "Deleting all from namespace $NAMESPACE"
 
       - name: Delete all
         run: |-
