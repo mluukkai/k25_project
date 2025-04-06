@@ -4,7 +4,6 @@ resources:
   - manifests/gateway.yaml
   - manifests/route.yaml
   - manifests/configmap.yaml
-  # - manifests/ingress.yaml
   - manifests/pvc.yaml
   - manifests/statefulset.yaml
 
