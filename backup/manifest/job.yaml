@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: project-backup-cron
+  name: project-backup
   namespace: project
 spec:
   schedule: "*/10 * * * *"

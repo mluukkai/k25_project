@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: wikipedia
+  name: project-wikipedia
   namespace: project
 spec:
   schedule: "0 * * * *"
