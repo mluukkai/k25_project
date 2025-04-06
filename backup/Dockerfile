@@ -3,7 +3,6 @@ FROM postgres:17
 WORKDIR /myapp
 
 COPY script.sh script.sh
-COPY sleeper.sh sleeper.sh
 COPY package.json package.json
 COPY index.js index.js
 
@@ -15,7 +14,6 @@ RUN apt-get update && apt-get install -y curl && \
 RUN npm install
 
 RUN chmod +x script.sh
-RUN chmod +x sleeper.sh
 
 CMD ["./script.sh"]
 

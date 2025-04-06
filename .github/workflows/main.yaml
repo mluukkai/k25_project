@@ -67,7 +67,7 @@ jobs:
           docker build --tag $WIKI_IMAGE_TAG wikipedia
           docker push $WIKI_IMAGE_TAG
 
-      - name : 'Build and push todo-wikipedia'
+      - name : 'Build and push todo-backup'
         run: |
           docker build --tag $BACKUP_IMAGE_TAG backup
           docker push $BACKUP_IMAGE_TAG
