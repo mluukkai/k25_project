@@ -15,6 +15,7 @@ resources:
   - todo-backend/manifests/service.yaml
 
   - wikipedia/manifests/job.yaml
+  - backup/manifests/job.yaml
 
 images:
   - name: PROJECT/TODO-APP
@@ -23,3 +24,5 @@ images:
     newName: mluukkai/project-todo-backend:5
   - name: PROJECT/WIKIPEDIA
     newName: mluukkai/project-todo-wikipedia:5
+  - name: PROJECT/BACKUP
+    newName: mluukkai/project-backup:14

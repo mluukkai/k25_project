@@ -12,6 +12,7 @@ env:
   APP:          project-todo-app
   BACKEND:      project-todo-backend
   WIKI:         project-todo-wikipedia
+  BACKUP:       project-backup
   BRANCH:       ${{ github.ref_name }}
   NAMESPACE:    ${{ github.ref_name == 'main' && 'project' || github.ref_name }}
 
@@ -48,6 +49,8 @@ jobs:
           echo "APP_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$APP:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
           echo "BACKEND_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BACKEND:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
           echo "WIKI_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$WIKI:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
+          echo "BACKUP_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BACKUP:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
+
 
       - name : 'Build and push todo-app'
         run: |
@@ -63,6 +66,11 @@ jobs:
         run: |
           docker build --tag $WIKI_IMAGE_TAG wikipedia
           docker push $WIKI_IMAGE_TAG
+
+      - name : 'Build and push todo-wikipedia'
+        run: |
+          docker build --tag $BACKUP_IMAGE_TAG backup
+          docker push $BACKUP_IMAGE_TAG
 
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v2.1.0

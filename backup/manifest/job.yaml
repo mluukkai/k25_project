@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: project-backup-cron
+  namespace: project
+spec:
+  schedule: "*/10 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: project-backup
+        spec:
+          volumes:
+            - name: service-account-key
+              configMap:
+                name: project-secret-conf
+                items:
+                  - key: "key.json"
+                    path: "private-key.json"
+          containers:
+            - name: backup
+              image: PROJECT/BACKUP
+              env:
+                - name: BUCKET_NAME
+                  value: mluukkai_project_backups
+                - name: DB_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: project-conf
+                      key: DB_URL
+              volumeMounts:
+                - name: service-account-key
+                  mountPath: "/myapp/config"
+                  readOnly: true
+          restartPolicy: OnFailure
