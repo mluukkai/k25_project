@@ -36,5 +36,13 @@ spec:
         volumeMounts:
           - name: project-share
             mountPath: /app/data
+        resources:
+          requests:
+            memory: "50Mi"
+            cpu: "20m"
+          limits:
+            memory: "100Mi"
+            cpu: "50m"
   strategy:
     type: Recreate
+  

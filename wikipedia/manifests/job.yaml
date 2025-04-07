@@ -18,4 +18,11 @@ spec:
                 configMapKeyRef:
                   name: project-conf
                   key: TODO_BACKEND_URL
+            resources:
+              requests:
+                memory: "50Mi"
+                cpu: "20m"
+              limits:
+                memory: "100Mi"
+                cpu: "50m"
           restartPolicy: Never

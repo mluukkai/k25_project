@@ -34,4 +34,11 @@ spec:
                 - name: service-account-key
                   mountPath: "/myapp/config"
                   readOnly: true
+              resources:
+                requests:
+                  memory: "50Mi"
+                  cpu: "20m"
+                limits:
+                  memory: "100Mi"
+                  cpu: "50m"
           restartPolicy: OnFailure

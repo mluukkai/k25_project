@@ -24,3 +24,10 @@ spec:
             configMapKeyRef:
               name: project-conf
               key: DB_URL
+        resources:
+          requests:
+            memory: "50Mi"
+            cpu: "20m"
+          limits:
+            memory: "100Mi"
+            cpu: "50m"
