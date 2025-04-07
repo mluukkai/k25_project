@@ -13,12 +13,8 @@ app.set('view engine', 'ejs')
 app.get('/', async (req, res) => {
   refetchImage();
   const url = process.env.TODO_BACKEND_URL || 'http://localhost:3001/todos';
-  console.log('Fetching todos from:', url);
   const response= await axios.get(url);
-  console.log('Response:', response.data);
   const todos = response.data;
-  console.log('Todos:', todos);
-
   res.render('index', { todos });
 });
 
