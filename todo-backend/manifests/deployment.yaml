@@ -31,3 +31,9 @@ spec:
           limits:
             memory: "100Mi"
             cpu: "50m"
+        readinessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          httpGet:
+              path: /healthz
+              port: 3001

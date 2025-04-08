@@ -3,17 +3,19 @@ const express = require('express');
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
-const { env } = require('process');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+
+const todoUrl = process.env.TODO_BACKEND_URL || 'http://localhost:3001';
 
 app.set('view engine', 'ejs')
 
 app.get('/', async (req, res) => {
   refetchImage();
-  const url = process.env.TODO_BACKEND_URL || 'http://localhost:3001/todos';
-  const response= await axios.get(url);
+  
+  const response= await axios.get(todoUrl + '/todos');
   const todos = response.data;
   res.render('index', { todos });
 });
@@ -47,6 +49,15 @@ const imageUrl = process.env.IMAGE_API_URL || 'https://picsum.photos/200';
     console.error('Error writing the file:', err);
   });
 }
+
+app.get('/healthz',async  (req, res) => {
+  const response = await axios.get(todoUrl + '/healthz');
+  if (response.status === 200) {
+    res.status(200).send('Service is healthy');
+  } else {
+    res.status(500).send('Service is not healthy');
+  }
+});
 
 const LIMIT = Number(process.env.IMAGE_REFETCH_INTERVAL) || 5;
 

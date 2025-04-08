@@ -22,6 +22,17 @@ const allTodos = async (req, res) => {
 app.get('/',allTodos);
 app.get('/todos', allTodos);
 
+app.get('/healthz', (req, res) => {
+  pool.query('SELECT 1', (err, result) => {
+    if (err) {
+      console.error('Health check failed:', err);
+      res.status(500).send('Database connection error');
+    } else {
+      res.send('healthy');
+    }
+  });
+});
+
 app.post('/todos', async (req, res) => {
   const newTodo = req.body;
 
