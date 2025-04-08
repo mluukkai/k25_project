@@ -13,4 +13,4 @@ EXPOSE ${PORT}
 # Start the application
 CMD ["node", "index.js"]
 
-# TAG=5; docker build --platform linux/amd64 -t mluukkai/project-todo-backend:$TAG . ; docker push mluukkai/project-todo-backend:$TAG
+# TAG=7; docker build --platform linux/amd64 -t mluukkai/project-todo-backend:$TAG . ; docker push mluukkai/project-todo-backend:$TAG

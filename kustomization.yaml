@@ -20,7 +20,7 @@ images:
   - name: PROJECT/TODO-APP
     newName: mluukkai/project-todo-app:6
   - name: PROJECT/TODO-BACKEND
-    newName: mluukkai/project-todo-backend:5
+    newName: mluukkai/project-todo-backend:7
   - name: PROJECT/WIKIPEDIA
     newName: mluukkai/project-todo-wikipedia:5
   - name: PROJECT/BACKUP

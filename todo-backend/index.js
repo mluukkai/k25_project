@@ -5,9 +5,15 @@ const { Pool } = require('pg');
 const port = process.env.PORT || 3001;
 const DB_URL = process.env.DB_URL || "postgres://postgres:postgres@localhost:5432/postgres";
 
-const pool = new Pool({
-  connectionString: DB_URL,
-});
+let pool = null
+
+try {
+  pool = new Pool({
+    connectionString: DB_URL,
+  });
+} catch (err) {
+  console.error('Error creating pool:', err);
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -18,18 +24,17 @@ const allTodos = async (req, res) => {
   res.json(todos);
 }
 
-app.get('/',allTodos);
+app.get('/', allTodos);
 app.get('/todos', allTodos);
 
-app.get('/healthz', (req, res) => {
-  pool.query('SELECT 1', (err, result) => {
-    if (err) {
-      console.error('Health check failed:', err);
-      res.status(500).send('Database connection error');
-    } else {
-      res.send('healthy');
-    }
-  });
+app.get('/healthz', async (req, res) => {
+  try {
+    await pool.query('SELECT 1');
+    res.send('healthy');
+  } catch (err) {
+    console.error('Health check failed:', err);
+    res.status(500).send('Database connection error');
+  }
 });
 
 app.post('/todos', async (req, res) => {
@@ -54,11 +59,18 @@ app.post('/todos', async (req, res) => {
 
 app.listen(port, async () => {
   console.log(`Server is running on port ${port}`);
-  await pool.query(
-    `CREATE TABLE IF NOT EXISTS todos (
-      id SERIAL PRIMARY KEY,
-      content VARCHAR(255) NOT NULL,
-      done BOOLEAN DEFAULT FALSE
-    )`
-  );
+
+  try {
+    await pool.query(
+      `CREATE TABLE IF NOT EXISTS todos (
+        id SERIAL PRIMARY KEY,
+        content VARCHAR(255) NOT NULL,
+        done BOOLEAN DEFAULT FALSE
+      )`
+    );
+    console.log('Table "todos" is ready');
+  } catch (err) {
+    console.error('Error creating table:', err);
+  }
+
 });
