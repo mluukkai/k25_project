@@ -51,10 +51,15 @@ const imageUrl = process.env.IMAGE_API_URL || 'https://picsum.photos/200';
 }
 
 app.get('/healthz',async  (req, res) => {
-  const response = await axios.get(todoUrl + '/healthz');
-  if (response.status === 200) {
-    res.status(200).send('Service is healthy');
-  } else {
+  try {
+    const response = await axios.get(todoUrl + '/healthz');
+    if (response.status === 200) {
+      res.status(200).send('Service is healthy');
+    } else {
+      res.status(500).send('Service is not healthy');
+    }
+  } catch (error) {
+    console.error('Error checking health:', error);
     res.status(500).send('Service is not healthy');
   }
 });

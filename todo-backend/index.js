@@ -9,7 +9,6 @@ const pool = new Pool({
   connectionString: DB_URL,
 });
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
