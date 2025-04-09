@@ -2,8 +2,13 @@ const express = require('express');
 const app = express();
 const { Pool } = require('pg');
 
+const { connect } = require("@nats-io/transport-node");
+
+let nc
+
 const port = process.env.PORT || 3001;
 const DB_URL = process.env.DB_URL || "postgres://postgres:postgres@localhost:5432/postgres";
+const NATS_URI = process.env.NATS || 'nats://localhost:4222';
 
 let pool = null
 
@@ -20,7 +25,14 @@ app.use(express.urlencoded({ extended: true }));
 
 const allTodos = async (req, res) => {
   const result = await pool.query('SELECT * FROM todos');
-  todos = result.rows;
+  const todos = result.rows;
+  
+  const object = {
+    todo: todos[0],
+    action: 'viewed'
+  };
+  nc.publish("todo", JSON.stringify(object));
+  
   res.json(todos);
 }
 
@@ -48,6 +60,12 @@ app.delete('/todos/:id', async (req, res) => {
     if (result.rows.length === 0) {
       res.status(404).send('Todo not found');
     } else {
+      const object = {
+        todo: result.rows[0],
+        action: 'deleted'
+      };
+      nc.publish("todo", JSON.stringify(object));
+    
       res.json(result.rows[0]);
     }
   } catch (err) {
@@ -70,6 +88,12 @@ app.post('/todos/:id', async (req, res) => {
     if (result.rows.length === 0) {
       res.status(404).send('Todo not found');
     }
+    const object = {
+      todo: result.rows[0],
+      action: 'done'
+    };
+    nc.publish("todo", JSON.stringify(object));
+  
   } catch (err) {
     console.error('Error updating todo:', err);
     res.status(500).send('Error updating todo');
@@ -87,6 +111,12 @@ app.post('/todos', async (req, res) => {
       'INSERT INTO todos (content, done) VALUES ($1, $2) RETURNING *',
       [newTodo.content, newTodo.done || false]
     );
+    const object = {
+      todo: result.rows[0],
+      action: 'created'
+    };
+    nc.publish("todo", JSON.stringify(object));
+  
     console.log('Todo saved:', result.rows[0]);
   } catch (err) {
     console.error('Error inserting todo:', err);
@@ -112,5 +142,14 @@ app.listen(port, async () => {
   } catch (err) {
     console.error('Error creating table:', err);
   }
+
+  nc = await connect({'servers': [ NATS_URI ]})
+  const sub = nc.subscribe("todo");
+  (async () => {
+    for await (const m of sub) {
+      console.log(`[${sub.getProcessed()}]: ${m.string()}`);
+    }
+    console.log("subscription closed");
+  })();
 
 });

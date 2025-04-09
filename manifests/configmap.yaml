@@ -9,3 +9,4 @@ data:
   IMAGE_API_URL: "https://picsum.photos/1200"
   IMAGE_REFETCH_INTERVAL: "10"
   DB_URL: "postgres://postgres:postgres@project-psql-svc:5432/postgres"
+  NATS_URI: "nats://my-nats.nats.svc.cluster.local:4222"

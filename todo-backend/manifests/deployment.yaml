@@ -24,6 +24,11 @@ spec:
             configMapKeyRef:
               name: project-conf
               key: DB_URL
+        - name: NATS_URI
+          valueFrom:
+            configMapKeyRef:
+              name: project-conf
+              key: NATS_URI      
         resources:
           requests:
             memory: "50Mi"
