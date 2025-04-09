@@ -143,6 +143,8 @@ app.listen(port, async () => {
     console.error('Error creating table:', err);
   }
 
+  console.log(`Connecting to NATS at ${NATS_URI}`);
+
   nc = await connect({'servers': [ NATS_URI ]})
   const sub = nc.subscribe("todo");
   (async () => {
