@@ -1,0 +1,10 @@
+{ 
+  "dependencies": {
+    "@nats-io/nats-core": "^3.0.2",
+    "@nats-io/transport-node": "^3.0.2"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  }
+}

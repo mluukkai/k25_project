@@ -16,6 +16,8 @@ resources:
   - wikipedia/manifests/job.yaml
   - backup/manifests/job.yaml
 
+  - todo-broadcaster/manifests/deployment.yaml
+
 images:
   - name: PROJECT/TODO-APP
     newName: mluukkai/project-todo-app:6

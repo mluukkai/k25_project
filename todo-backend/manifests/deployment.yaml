@@ -14,7 +14,7 @@ spec:
         app: project-todo-backend
     spec:   
       containers: 
-      - name: todo-app
+      - name: todo-backend
         image: PROJECT/TODO-BACKEND
         env:
         - name: PORT
