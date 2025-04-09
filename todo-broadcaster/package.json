@@ -1,10 +1,1 @@
-{ 
-  "dependencies": {
-    "@nats-io/nats-core": "^3.0.2",
-    "@nats-io/transport-node": "^3.0.2"
-  },
-  "scripts": {
-    "start": "node index.js",
-    "dev": "node --watch index.js"
-  }
-}
+{"dependencies":{"@nats-io/nats-core":"^3.0.2","@nats-io/transport-node":"^3.0.2","discord-webhook-node":"^1.1.8","webhook-discord":"^3.7.8"},"scripts":{"start":"node index.js","dev":"node --watch index.js"}}
