@@ -8,7 +8,7 @@ let nc
 
 const port = process.env.PORT || 3001;
 const DB_URL = process.env.DB_URL || "postgres://postgres:postgres@localhost:5432/postgres";
-const NATS_URI = process.env.NATS || 'nats://localhost:4222';
+const NATS_URI = process.env.NATS_URI || 'nats://localhost:4222';
 
 let pool = null
 
