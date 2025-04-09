@@ -15,9 +15,10 @@ app.set('view engine', 'ejs')
 app.get('/', async (req, res) => {
   refetchImage();
   
-  const response= await axios.get(todoUrl + '/todos');
-  const todos = response.data;
-  res.render('index', { todos });
+  const response = await axios.get(todoUrl + '/todos');
+  const todos = response.data.filter(todo => !todo.done);
+  const dones = response.data.filter(todo => todo.done);
+  res.render('index', { todos, dones });
 });
 
 app.use(express.json());

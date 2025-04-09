@@ -12,9 +12,22 @@
         <input type="text" id="content" name="content" maxlength="140" required>
         <button type="submit">Create todo</button>
       </form>
+      <h3>Todo</h3>
       <ul>
         <% todos.forEach(function(todo) { %>
-          <li><%= todo.content %></li>
+          <li>
+            <%= todo.content %>
+            <form action="/todos/<%= todo.id %>" method="post" style="display:inline;">
+              <input type="hidden" name="_method" value="PUT">
+              <button type="submit">Mark as done</button>
+            </form>
+          </li>
+        <% }); %>
+      </ul>
+      <h3>Done</h3>
+      <ul>
+        <% dones.forEach(function(done) { %>
+          <li><%= done.content %></li>
         <% }); %>
       </ul>
       <p>
