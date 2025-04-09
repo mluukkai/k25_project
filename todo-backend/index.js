@@ -26,13 +26,6 @@ app.use(express.urlencoded({ extended: true }));
 const allTodos = async (req, res) => {
   const result = await pool.query('SELECT * FROM todos');
   const todos = result.rows;
-  
-  const object = {
-    todo: todos[0],
-    action: 'viewed'
-  };
-  nc.publish("todo", JSON.stringify(object));
-  
   res.json(todos);
 }
 
