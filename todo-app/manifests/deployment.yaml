@@ -19,7 +19,7 @@ spec:
             claimName: project-claim    
       containers: 
       - name: todo-app
-        image: PROJECT/TODO-APP
+        image: TODO-APP
         env:
         - name: PORT
           value: "3001"

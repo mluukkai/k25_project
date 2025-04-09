@@ -19,11 +19,13 @@ resources:
   - todo-broadcaster/manifests/deployment.yaml
 
 images:
-  - name: PROJECT/TODO-APP
+  - name: TODO-APP
     newName: mluukkai/project-todo-app:6
-  - name: PROJECT/TODO-BACKEND
+  - name: TODO-BACKEND
     newName: mluukkai/project-todo-backend:7
-  - name: PROJECT/WIKIPEDIA
+  - name: WIKIPEDIA
     newName: mluukkai/project-todo-wikipedia:5
-  - name: PROJECT/BACKUP
+  - name: BACKUP
     newName: mluukkai/project-backup:14
+  - name: TODO-BROADCASTER
+    newName: mluukkai/not_existing_image

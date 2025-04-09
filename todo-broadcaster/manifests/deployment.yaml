@@ -15,7 +15,7 @@ spec:
     spec:   
       containers: 
       - name: todo-broadcaster
-        image: PROJECT/TODO-BROADCASTER
+        image: TODO-BROADCASTER
         env:
         - name: NATS_URI
           valueFrom:

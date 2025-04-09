@@ -11,7 +11,7 @@ spec:
         spec:
           containers:
           - name: wikipedia
-            image: PROJECT/WIKIPEDIA
+            image: WIKIPEDIA
             env:
             - name: TODO_BACKEND_URL
               valueFrom:

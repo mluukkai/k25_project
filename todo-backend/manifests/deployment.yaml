@@ -15,7 +15,7 @@ spec:
     spec:   
       containers: 
       - name: todo-backend
-        image: PROJECT/TODO-BACKEND
+        image: TODO-BACKEND
         env:
         - name: PORT
           value: "3001"
