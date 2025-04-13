@@ -80,13 +80,7 @@ jobs:
 
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v2.1.0
-
-      - name: Set namespace 
-        run: |
-          kubectl create namespace $NAMESPACE || echo "Namespace $NAMESPACE already exists"
-          kubectl config set-context --current --namespace=$NAMESPACE
-          kustomize edit set namespace $NAMESPACE
-      
+  
       - name: Deploy
         run: |-
           kustomize edit set image TODO-APP=$APP_IMAGE_TAG
@@ -94,5 +88,9 @@ jobs:
           kustomize edit set image WIKIPEDIA=$WIKI_IMAGE_TAG
           kustomize edit set image BACKUP=$BACKUP_IMAGE_TAG
           kustomize edit set image TODO-BROADCASTER=$BROADCASTER_IMAGE_TAG
-          kustomize build . | kubectl apply -f -
-          kubectl get services -n $NAMESPACE -o wide
+
+      - name: commit kustomization.yaml to GitHub
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: 'kustomization.yaml'
+          message: New version released ${{ github.sha }}
