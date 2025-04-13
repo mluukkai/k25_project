@@ -1,31 +1,36 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
+
+
+
 resources:
-  - manifests/gateway.yaml
-  - manifests/route.yaml
-  - manifests/configmap.yaml
-  - manifests/pvc.yaml
-  - manifests/statefulset.yaml
-
-  - todo-app/manifests/deployment.yaml
-  - todo-app/manifests/service.yaml
-
-  - todo-backend/manifests/deployment.yaml
-  - todo-backend/manifests/service.yaml
-
-  - wikipedia/manifests/job.yaml
-  - backup/manifests/job.yaml
-
-  - todo-broadcaster/manifests/deployment.yaml
+- manifests/gateway.yaml
+- manifests/route.yaml
+- manifests/configmap.yaml
+- manifests/pvc.yaml
+- manifests/statefulset.yaml
+- todo-app/manifests/deployment.yaml
+- todo-app/manifests/service.yaml
+- todo-backend/manifests/deployment.yaml
+- todo-backend/manifests/service.yaml
+- wikipedia/manifests/job.yaml
+- backup/manifests/job.yaml
+- todo-broadcaster/manifests/deployment.yaml
 
 images:
-  - name: TODO-APP
-    newName: mluukkai/project-todo-app:6
-  - name: TODO-BACKEND
-    newName: mluukkai/project-todo-backend:7
-  - name: WIKIPEDIA
-    newName: mluukkai/project-todo-wikipedia:5
-  - name: BACKUP
-    newName: mluukkai/project-backup:14
-  - name: TODO-BROADCASTER
-    newName: mluukkai/not_existing_image
+- name: BACKUP
+  newName: europe-north1-docker.pkg.dev/dwk-gke-455410/my-repository/project-backup
+  newTag: main-a47c57a1eb42152b6d67050a235944b55a2f4623
+- name: TODO-APP
+  newName: europe-north1-docker.pkg.dev/dwk-gke-455410/my-repository/project-todo-app
+  newTag: main-a47c57a1eb42152b6d67050a235944b55a2f4623
+- name: TODO-BACKEND
+  newName: europe-north1-docker.pkg.dev/dwk-gke-455410/my-repository/project-todo-backend
+  newTag: main-a47c57a1eb42152b6d67050a235944b55a2f4623
+- name: TODO-BROADCASTER
+  newName: europe-north1-docker.pkg.dev/dwk-gke-455410/my-repository/project-todo-broadcaster
+  newTag: main-a47c57a1eb42152b6d67050a235944b55a2f4623
+- name: WIKIPEDIA
+  newName: europe-north1-docker.pkg.dev/dwk-gke-455410/my-repository/project-todo-wikipedia
+  newTag: main-a47c57a1eb42152b6d67050a235944b55a2f4623
