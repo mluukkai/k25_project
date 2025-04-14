@@ -1,0 +1,10 @@
+resources:
+- ./../../base
+- backup/job.yaml
+
+patches:
+  - path:  broadcaster/deployment.yaml
+
+namespace: project
+
+

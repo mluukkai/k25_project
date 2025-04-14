@@ -81,8 +81,9 @@ jobs:
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v2.1.0
   
-      - name: Deploy
+      - name: Set images
         run: |-
+          cd overlays/prod/
           kustomize edit set image TODO-APP=$APP_IMAGE_TAG
           kustomize edit set image TODO-BACKEND=$BACKEND_IMAGE_TAG
           kustomize edit set image WIKIPEDIA=$WIKI_IMAGE_TAG

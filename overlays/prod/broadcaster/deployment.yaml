@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-todo-broadcaster-dep
+spec:
+  template:
+    spec:   
+      containers: 
+      - name: todo-broadcaster
+        image: TODO-BROADCASTER
+        env:
+        - name: ENV
+          value: "production"

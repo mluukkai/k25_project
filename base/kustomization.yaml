@@ -1,22 +1,22 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-
-
-
 resources:
-- manifests/gateway.yaml
-- manifests/route.yaml
-- manifests/configmap.yaml
-- manifests/pvc.yaml
-- manifests/statefulset.yaml
-- todo-app/manifests/deployment.yaml
-- todo-app/manifests/service.yaml
-- todo-backend/manifests/deployment.yaml
-- todo-backend/manifests/service.yaml
-- wikipedia/manifests/job.yaml
-- backup/manifests/job.yaml
-- todo-broadcaster/manifests/deployment.yaml
+- gateway.yaml
+- route.yaml
+- configmap.yaml
+- pvc.yaml
+- statefulset.yaml
+
+- app/deployment.yaml
+- app/service.yaml
+
+- backend/deployment.yaml
+- backend/service.yaml
+
+- wikipedia/job.yaml
+
+- broadcaster/deployment.yaml
 
 images:
 - name: BACKUP

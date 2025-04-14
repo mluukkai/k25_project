@@ -2,7 +2,6 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: project-wikipedia
-  namespace: project
 spec:
   schedule: "5 */4 * * *"
   jobTemplate:

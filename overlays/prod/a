@@ -1,0 +1,373 @@
+apiVersion: v1
+data:
+  DB_URL: postgres://postgres:postgres@project-psql-svc:5432/postgres
+  IMAGE_API_URL: https://picsum.photos/1200
+  IMAGE_REFETCH_INTERVAL: "10"
+  MESSAGE: hello world
+  NATS_URI: nats://my-nats.nats.svc.cluster.local:4222
+  TODO_BACKEND_URL: http://project-todo-backend-svc:2332
+kind: ConfigMap
+metadata:
+  name: project-conf
+  namespace: project
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: project-psql-svc
+  namespace: project
+spec:
+  clusterIP: None
+  ports:
+  - name: web
+    port: 5432
+  selector:
+    app: postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: project-todo-app-svc
+  namespace: project
+spec:
+  ports:
+  - port: 2332
+    protocol: TCP
+    targetPort: 3001
+  selector:
+    app: project-todo-app
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: project-todo-backend-svc
+  namespace: project
+spec:
+  ports:
+  - port: 2332
+    protocol: TCP
+    targetPort: 3001
+  selector:
+    app: project-todo-backend
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: project-claim
+  namespace: project
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-todo-app-dep
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-todo-app
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: project-todo-app
+    spec:
+      containers:
+      - env:
+        - name: PORT
+          value: "3001"
+        - name: TODO_BACKEND_URL
+          valueFrom:
+            configMapKeyRef:
+              key: TODO_BACKEND_URL
+              name: project-conf
+        - name: IMAGE_API_URL
+          valueFrom:
+            configMapKeyRef:
+              key: IMAGE_API_URL
+              name: project-conf
+        image: europe-north1-docker.pkg.dev/dwk-gke-455410/my-repository/project-todo-app:main-a47c57a1eb42152b6d67050a235944b55a2f4623
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3001
+          initialDelaySeconds: 20
+          periodSeconds: 5
+        name: todo-app
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3001
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        resources:
+          limits:
+            cpu: 50m
+            memory: 100Mi
+          requests:
+            cpu: 20m
+            memory: 50Mi
+        volumeMounts:
+        - mountPath: /app/data
+          name: project-share
+      volumes:
+      - name: project-share
+        persistentVolumeClaim:
+          claimName: project-claim
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-todo-backend-dep
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-todo-backend
+  template:
+    metadata:
+      labels:
+        app: project-todo-backend
+    spec:
+      containers:
+      - env:
+        - name: PORT
+          value: "3001"
+        - name: DB_URL
+          valueFrom:
+            configMapKeyRef:
+              key: DB_URL
+              name: project-conf
+        - name: NATS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: NATS_URI
+              name: project-conf
+        image: europe-north1-docker.pkg.dev/dwk-gke-455410/my-repository/project-todo-backend:main-a47c57a1eb42152b6d67050a235944b55a2f4623
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3001
+          initialDelaySeconds: 20
+          periodSeconds: 5
+        name: todo-backend
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3001
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        resources:
+          limits:
+            cpu: 50m
+            memory: 100Mi
+          requests:
+            cpu: 20m
+            memory: 50Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-todo-broadcaster-dep
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-todo-broadcaster
+  template:
+    metadata:
+      labels:
+        app: project-todo-broadcaster
+    spec:
+      containers:
+      - env:
+        - name: ENV
+          value: production
+        - name: NATS_URI
+          valueFrom:
+            configMapKeyRef:
+              key: NATS_URI
+              name: project-conf
+        image: TODO-BROADCASTER
+        name: todo-broadcaster
+        resources:
+          limits:
+            cpu: 50m
+            memory: 100Mi
+          requests:
+            cpu: 20m
+            memory: 50Mi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: project-psql-statefulset
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  serviceName: project-psql-svc
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: postgres
+        - name: POSTGRES_DB
+          value: postgres
+        image: postgres
+        name: postgres
+        ports:
+        - containerPort: 5432
+          name: web
+        resources:
+          limits:
+            cpu: 50m
+            memory: 100Mi
+          requests:
+            cpu: 20m
+            memory: 50Mi
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: psql-data-storage
+          subPath: postgres
+  volumeClaimTemplates:
+  - metadata:
+      name: psql-data-storage
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 100Mi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: project-backup
+  namespace: project
+spec:
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: project-backup
+        spec:
+          containers:
+          - env:
+            - name: BUCKET_NAME
+              value: mluukkai_project_backups
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_URL
+                  name: project-conf
+            image: BACKUP
+            name: backup
+            resources:
+              limits:
+                cpu: 50m
+                memory: 100Mi
+              requests:
+                cpu: 20m
+                memory: 50Mi
+            volumeMounts:
+            - mountPath: /myapp/config
+              name: service-account-key
+              readOnly: true
+          restartPolicy: OnFailure
+          volumes:
+          - configMap:
+              items:
+              - key: key.json
+                path: private-key.json
+              name: project-secret-conf
+            name: service-account-key
+  schedule: 0 * * * *
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: project-wikipedia
+  namespace: project
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - env:
+            - name: TODO_BACKEND_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: TODO_BACKEND_URL
+                  name: project-conf
+            image: europe-north1-docker.pkg.dev/dwk-gke-455410/my-repository/project-todo-wikipedia:main-a47c57a1eb42152b6d67050a235944b55a2f4623
+            name: wikipedia
+            resources:
+              limits:
+                cpu: 50m
+                memory: 100Mi
+              requests:
+                cpu: 20m
+                memory: 50Mi
+          restartPolicy: Never
+  schedule: 5 */4 * * *
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: project-gateway
+  namespace: project
+spec:
+  gatewayClassName: gke-l7-global-external-managed
+  listeners:
+  - allowedRoutes:
+      kinds:
+      - kind: HTTPRoute
+    name: http
+    port: 80
+    protocol: HTTP
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: project-route
+  namespace: project
+spec:
+  parentRefs:
+  - name: project-gateway
+  rules:
+  - backendRefs:
+    - name: project-todo-app-svc
+      port: 2332
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+  - backendRefs:
+    - name: project-todo-backend-svc
+      port: 2332
+    matches:
+    - path:
+        type: PathPrefix
+        value: /todos

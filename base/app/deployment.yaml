@@ -1,34 +1,40 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: project-todo-backend-dep
-  namespace: project
+  name: project-todo-app-dep
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: project-todo-backend
+      app: project-todo-app
   template:
     metadata:
       labels:
-        app: project-todo-backend
-    spec:   
+        app: project-todo-app
+    spec:
+      volumes:
+        - name: project-share
+          persistentVolumeClaim:
+            claimName: project-claim    
       containers: 
-      - name: todo-backend
-        image: TODO-BACKEND
+      - name: todo-app
+        image: TODO-APP
         env:
         - name: PORT
           value: "3001"
-        - name: DB_URL
+        - name: TODO_BACKEND_URL
           valueFrom:
             configMapKeyRef:
               name: project-conf
-              key: DB_URL
-        - name: NATS_URI
+              key: TODO_BACKEND_URL
+        - name: IMAGE_API_URL
           valueFrom:
             configMapKeyRef:
               name: project-conf
-              key: NATS_URI      
+              key: IMAGE_API_URL
+        volumeMounts:
+          - name: project-share
+            mountPath: /app/data
         resources:
           requests:
             memory: "50Mi"
@@ -48,3 +54,6 @@ spec:
             httpGet:
                path: /healthz
                port: 3001
+  strategy:
+    type: Recreate
+  
