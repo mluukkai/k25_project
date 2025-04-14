@@ -73,7 +73,7 @@ jobs:
           docker build --tag $BACKUP_IMAGE_TAG backup
           docker push $BACKUP_IMAGE_TAG
 
-      - name : 'Build and push todo-backup'
+      - name : 'Build and push todo-broadcaster'
         run: |
           docker build --tag $BROADCASTER_IMAGE_TAG todo-broadcaster
           docker push $BROADCASTER_IMAGE_TAG
