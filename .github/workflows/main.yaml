@@ -82,13 +82,16 @@ jobs:
         uses: imranismail/setup-kustomize@v2.1.0
   
       - name: Set images
+        working-directory: overlays/prod/
         run: |-
-          cd overlays/prod/
           kustomize edit set image TODO-APP=$APP_IMAGE_TAG
           kustomize edit set image TODO-BACKEND=$BACKEND_IMAGE_TAG
           kustomize edit set image WIKIPEDIA=$WIKI_IMAGE_TAG
           kustomize edit set image BACKUP=$BACKUP_IMAGE_TAG
           kustomize edit set image TODO-BROADCASTER=$BROADCASTER_IMAGE_TAG
+
+      - name: s
+        run: git status
 
       - name: commit kustomization.yaml to GitHub
         uses: EndBug/add-and-commit@v9
