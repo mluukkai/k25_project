@@ -53,25 +53,25 @@ jobs:
           echo "BACKUP_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BACKUP:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
           echo "BROADCASTER_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BROADCASTER:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
 
-      - name : 'Build and push todo-app'
-        run: |
-          docker build --tag $APP_IMAGE_TAG todo-app
-          docker push $APP_IMAGE_TAG
+      # - name : 'Build and push todo-app'
+      #   run: |
+      #     docker build --tag $APP_IMAGE_TAG todo-app
+      #     docker push $APP_IMAGE_TAG
       
-      - name : 'Build and push todo-backend'
-        run: |
-          docker build --tag $BACKEND_IMAGE_TAG todo-backend
-          docker push $BACKEND_IMAGE_TAG
+      # - name : 'Build and push todo-backend'
+      #   run: |
+      #     docker build --tag $BACKEND_IMAGE_TAG todo-backend
+      #     docker push $BACKEND_IMAGE_TAG
 
-      - name : 'Build and push todo-wikipedia'
-        run: |
-          docker build --tag $WIKI_IMAGE_TAG wikipedia
-          docker push $WIKI_IMAGE_TAG
+      # - name : 'Build and push todo-wikipedia'
+      #   run: |
+      #     docker build --tag $WIKI_IMAGE_TAG wikipedia
+      #     docker push $WIKI_IMAGE_TAG
 
-      - name : 'Build and push todo-backup'
-        run: |
-          docker build --tag $BACKUP_IMAGE_TAG backup
-          docker push $BACKUP_IMAGE_TAG
+      # - name : 'Build and push todo-backup'
+      #   run: |
+      #     docker build --tag $BACKUP_IMAGE_TAG backup
+      #     docker push $BACKUP_IMAGE_TAG
 
       - name : 'Build and push todo-broadcaster'
         run: |
@@ -84,14 +84,17 @@ jobs:
       - name: Set images
         working-directory: overlays/prod/
         run: |-
+          ls -a
           kustomize edit set image TODO-APP=$APP_IMAGE_TAG
           kustomize edit set image TODO-BACKEND=$BACKEND_IMAGE_TAG
           kustomize edit set image WIKIPEDIA=$WIKI_IMAGE_TAG
           kustomize edit set image BACKUP=$BACKUP_IMAGE_TAG
           kustomize edit set image TODO-BROADCASTER=$BROADCASTER_IMAGE_TAG
 
-      - name: s
-        run: git status
+      - name: debug
+        run: |-
+          git status
+          git diff
 
       - name: commit kustomization.yaml to GitHub
         uses: EndBug/add-and-commit@v9
