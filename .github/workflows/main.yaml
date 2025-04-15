@@ -10,7 +10,6 @@ env:
   REGISTRY:     europe-north1-docker.pkg.dev
   REPOSITORY:   my-repository
   APP:          project-todo-app
-  APP_IMAGE_TAG: ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.APP }}:${{ env.BRANCH }}-${{ github.sha }}
   BACKEND:      project-todo-backend
   WIKI:         project-todo-wikipedia
   BROADCASTER:  project-todo-broadcaster
@@ -90,26 +89,35 @@ jobs:
     needs: [build-images]
     
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GKE_SA_KEY }}'
+
+      - name : 'Tag names'
+        run: |
+          echo "APP_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$APP:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
+          echo "BACKEND_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BACKEND:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
+          echo "WIKI_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$WIKI:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
+          echo "BACKUP_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BACKUP:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
+          echo "BROADCASTER_IMAGE_TAG=$REGISTRY/$PROJECT_ID/$REPOSITORY/$BROADCASTER:$BRANCH-$GITHUB_SHA" >> $GITHUB_ENV
+
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v2.1.0
-  
+
+      - name: Set images
+        working-directory: overlays/prod/
+        run: |-
+          ls -a
+          kustomize edit set image TODO-APP=$APP_IMAGE_TAG
+          kustomize edit set image TODO-BACKEND=$BACKEND_IMAGE_TAG
+          kustomize edit set image WIKIPEDIA=$WIKI_IMAGE_TAG
+          kustomize edit set image BACKUP=$BACKUP_IMAGE_TAG
+          kustomize edit set image TODO-BROADCASTER=$BROADCASTER_IMAGE_TAG
+
       - name: debug
         run: |-
           echo "HELLO JOB"
-          echo APP_IMAGE_TAG$
-
-      # - name: Set images
-      #   working-directory: overlays/prod/
-      #   run: |-
-      #     ls -a
-      #     kustomize edit set image TODO-APP=$APP_IMAGE_TAG
-      #     kustomize edit set image TODO-BACKEND=$BACKEND_IMAGE_TAG
-      #     kustomize edit set image WIKIPEDIA=$WIKI_IMAGE_TAG
-      #     kustomize edit set image BACKUP=$BACKUP_IMAGE_TAG
-      #     kustomize edit set image TODO-BROADCASTER=$BROADCASTER_IMAGE_TAG
-
-      # - name: debug
-      #   run: |-
-      #     echo "HELLO JOB"
-      #     git status
-      #     git diff
+          git status
+          git diff
