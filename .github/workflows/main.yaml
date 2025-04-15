@@ -128,6 +128,13 @@ jobs:
           git status
           git diff
 
+      - name: commit production kustomization.yaml to GitHub 
+        run: | 
+          git add '${{ env.DIR }}/kustomization.yaml'
+          git commit -m "update images"
+          git status
+          git push origin main
+
       # - name: commit production kustomization.yaml to GitHub on
       #   if: github.ref_type == 'tag'
       #   uses: EndBug/add-and-commit@v9
