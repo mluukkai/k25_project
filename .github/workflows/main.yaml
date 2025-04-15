@@ -85,9 +85,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          repository: mluukkai/k25_project_conf
+          ref: 'main'
+          token:  ${{ secrets.REPO_TOKEN }}
+        
       - uses: google-github-actions/auth@v2
         with:
           credentials_json: '${{ secrets.GKE_SA_KEY }}'
+
+      - name: debug 1
+        run: |-
+            ls -la
+     
 
       - name : 'Tag names'
         run: |
@@ -118,16 +128,16 @@ jobs:
           git status
           git diff
 
-      - name: commit production kustomization.yaml to GitHub on
-        if: github.ref_type == 'tag'
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: '${{ env.DIR }}/kustomization.yaml'
-          message: New version released ${{ github.sha }}
+      # - name: commit production kustomization.yaml to GitHub on
+      #   if: github.ref_type == 'tag'
+      #   uses: EndBug/add-and-commit@v9
+      #   with:
+      #     add: '${{ env.DIR }}/kustomization.yaml'
+      #     message: New version released ${{ github.sha }}
 
-      - name: commit staging kustomization.yaml to GitHub on
-        if: github.ref_type != 'tag'
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: '${{ env.DIR }}/kustomization.yaml'
-          message: New version released ${{ github.sha }}
+      # - name: commit staging kustomization.yaml to GitHub on
+      #   if: github.ref_type != 'tag'
+      #   uses: EndBug/add-and-commit@v9
+      #   with:
+      #     add: '${{ env.DIR }}/kustomization.yaml'
+      #     message: New version released ${{ github.sha }}
