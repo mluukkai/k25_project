@@ -12,7 +12,7 @@
         <input type="text" id="content" name="content" maxlength="140" required>
         <button type="submit">Create todo</button>
       </form>
-      <h3>Todo <%= env === 'staging' ? '(staging)' : '' %></h3>
+      <h3>Todo <%= env === 'staging' ? '(staging)' : '' %> (<%= env %>)</h3>
 
       <ul>
         <% todos.forEach(function(todo) { %>
