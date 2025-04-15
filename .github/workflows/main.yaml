@@ -94,10 +94,13 @@ jobs:
         with:
           credentials_json: '${{ secrets.GKE_SA_KEY }}'
 
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+
       - name: debug 1
         run: |-
-            git config user.name "github-actions[bot]"
-            git config user.email "mluukkai+github-actions[bot]@users.noreply.github.com"
             ls -la
      
       - name : 'Tag names'
