@@ -4,6 +4,7 @@ const { Webhook, MessageBuilder } = require('discord-webhook-node');
 
 const NATS_URI = process.env.NATS_URI || 'nats://localhost:4222';
 const WEBHOOK = process.env.WEBHOOK || 'https://study.cs.helsinki.fi/discord/webhooks/1264842173619109949';
+const ENVIRONMENT = process.env.ENV || 'staging';
 
 const hook = new Webhook(WEBHOOK);
 
@@ -25,7 +26,13 @@ const main =  async () => {
         .setURL('https://devopswithkubernetes.com/')
         .setTimestamp();
         
-        await hook.send(embed);
+        if (ENVIRONMENT === 'prod') {
+          await hook.send(embed);
+          console.log('should broadcast', object, ENVIRONMENT)
+        } else {
+          console.log('would broadcast', object, ENVIRONMENT)
+        }
+       
       }
       catch (err) {
         if (err.toString().includes("Error: Error sending webhook: 200 status code. Response: Webhook sent successfully")) {
