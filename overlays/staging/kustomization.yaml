@@ -5,3 +5,19 @@ resources:
 - ./../../base
 
 namespace: project-staging
+images:
+- name: BACKUP
+  newName: europe-north1-docker.pkg.dev/dwk-gke-455410/my-repository/project-backup
+  newTag: main-335fcd2247fcd2b968eeb1b443f20fc072f93230
+- name: TODO-APP
+  newName: europe-north1-docker.pkg.dev/dwk-gke-455410/my-repository/project-todo-app
+  newTag: main-335fcd2247fcd2b968eeb1b443f20fc072f93230
+- name: TODO-BACKEND
+  newName: europe-north1-docker.pkg.dev/dwk-gke-455410/my-repository/project-todo-backend
+  newTag: main-335fcd2247fcd2b968eeb1b443f20fc072f93230
+- name: TODO-BROADCASTER
+  newName: europe-north1-docker.pkg.dev/dwk-gke-455410/my-repository/project-todo-broadcaster
+  newTag: main-335fcd2247fcd2b968eeb1b443f20fc072f93230
+- name: WIKIPEDIA
+  newName: europe-north1-docker.pkg.dev/dwk-gke-455410/my-repository/project-todo-wikipedia
+  newTag: main-335fcd2247fcd2b968eeb1b443f20fc072f93230
