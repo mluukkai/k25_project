@@ -52,7 +52,6 @@ const imageUrl = process.env.IMAGE_API_URL || 'https://picsum.photos/200';
 }
 
 app.get('/healthz',async  (req, res) => {
- 
   try {
     console.log('Health check requested', todoUrl + '/healthz');
     const response = await axios.get(todoUrl + '/healthz');
@@ -93,6 +92,7 @@ const refetchImage = async () => {
 }
 
 app.get('/image', (req, res) => {
+  console.log('Image requested');
   const imagePath = path.join(__dirname, 'data/image.jpg');
   res.sendFile(imagePath);
 });
