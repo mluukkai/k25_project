@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-todo-app-dep
+spec:
+
+  template:
+    metadata:
+      labels:
+        app: project-todo-app
+    spec:
+
+      containers: 
+      - name: todo-app
+        image: TODO-APP
+        env:
+        - name: ENV
+          value: "staging"
+

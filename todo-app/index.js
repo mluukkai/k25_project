@@ -6,7 +6,7 @@ const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 3000;
-
+const ENVIRONMENT = process.env.ENV || 'unknown';
 
 const todoUrl = process.env.TODO_BACKEND_URL || 'http://localhost:3001';
 
@@ -18,7 +18,7 @@ app.get('/', async (req, res) => {
   const response = await axios.get(todoUrl + '/todos');
   const todos = response.data.filter(todo => !todo.done);
   const dones = response.data.filter(todo => todo.done);
-  res.render('index', { todos, dones });
+  res.render('index', { todos, dones, env: ENVIRONMENT });
 });
 
 app.use(express.json());

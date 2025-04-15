@@ -57,25 +57,25 @@ jobs:
           docker build --tag $APP_IMAGE_TAG todo-app
           docker push $APP_IMAGE_TAG
       
-      # - name : 'Build and push todo-backend'
-      #   run: |
-      #     docker build --tag $BACKEND_IMAGE_TAG todo-backend
-      #     docker push $BACKEND_IMAGE_TAG
+      - name : 'Build and push todo-backend'
+        run: |
+          docker build --tag $BACKEND_IMAGE_TAG todo-backend
+          docker push $BACKEND_IMAGE_TAG
 
-      # - name : 'Build and push todo-wikipedia'
-      #   run: |
-      #     docker build --tag $WIKI_IMAGE_TAG wikipedia
-      #     docker push $WIKI_IMAGE_TAG
+      - name : 'Build and push todo-wikipedia'
+        run: |
+          docker build --tag $WIKI_IMAGE_TAG wikipedia
+          docker push $WIKI_IMAGE_TAG
 
-      # - name : 'Build and push todo-backup'
-      #   run: |
-      #     docker build --tag $BACKUP_IMAGE_TAG backup
-      #     docker push $BACKUP_IMAGE_TAG
+      - name : 'Build and push todo-backup'
+        run: |
+          docker build --tag $BACKUP_IMAGE_TAG backup
+          docker push $BACKUP_IMAGE_TAG
 
-      # - name : 'Build and push todo-broadcaster'
-      #   run: |
-      #     docker build --tag $BROADCASTER_IMAGE_TAG todo-broadcaster
-      #     docker push $BROADCASTER_IMAGE_TAG
+      - name : 'Build and push todo-broadcaster'
+        run: |
+          docker build --tag $BROADCASTER_IMAGE_TAG todo-broadcaster
+          docker push $BROADCASTER_IMAGE_TAG
 
   kustomise:
     name: Kustomize and commit
