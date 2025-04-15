@@ -17,8 +17,8 @@ env:
   BRANCH:       ${{ github.ref_name }}
 
 jobs:
-  build-publish-deploy:
-    name: Build, Publish and Deploy
+  build-images:
+    name: Build images
     runs-on: ubuntu-latest
 
     steps:
@@ -100,3 +100,15 @@ jobs:
         with:
           add: 'overlays/prod/kustomization.yaml'
           message: New version released ${{ github.sha }}
+
+  kustomise:
+    name: Build images
+    runs-on: ubuntu-latest
+    needs: [build-images]
+    
+    steps:
+      - name: debug
+        run: |-
+          echo "HELLO JOB"
+          git status
+          git diff
