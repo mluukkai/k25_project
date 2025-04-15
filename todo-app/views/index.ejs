@@ -6,13 +6,13 @@
 <body>
   <main>
     <div>
-      <h1>The Project App</h1>
+      <h1>The Project App <%= env === 'staging' ? '(staging)' : '' %></h1>
       <img src="image" alt="Kubeapp" width="300" />
       <form action="/todos" method="post">
         <input type="text" id="content" name="content" maxlength="140" required>
         <button type="submit">Create todo</button>
       </form>
-      <h3>Todo <%= env === 'staging' ? '(staging)' : '' %> (<%= env %>)</h3>
+      <h3>Todo/h3>
 
       <ul>
         <% todos.forEach(function(todo) { %>
@@ -33,7 +33,6 @@
       </ul>
       <p>
         <a href="https://courses.mooc.fi/org/uh-cs/courses/devops-with-kubernetes" target="_blank">DevOps with Kubernetes 2025</a> University of Helsinki
-        (<%= env %>)
       </p>
     </div>
   </main>
