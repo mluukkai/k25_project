@@ -95,11 +95,11 @@ jobs:
           git status
           git diff
 
-      - name: commit kustomization.yaml to GitHub
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: 'overlays/prod/kustomization.yaml'
-          message: New version released ${{ github.sha }}
+      # - name: commit kustomization.yaml to GitHub
+      #   uses: EndBug/add-and-commit@v9
+      #   with:
+      #     add: 'overlays/prod/kustomization.yaml'
+      #     message: New version released ${{ github.sha }}
 
   kustomise:
     name: Build images
