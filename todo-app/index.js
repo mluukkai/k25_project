@@ -52,7 +52,9 @@ const imageUrl = process.env.IMAGE_API_URL || 'https://picsum.photos/200';
 }
 
 app.get('/healthz',async  (req, res) => {
+ 
   try {
+    console.log('Health check requested', todoUrl + '/healthz');
     const response = await axios.get(todoUrl + '/healthz');
     if (response.status === 200) {
       res.status(200).send('Service is healthy');
