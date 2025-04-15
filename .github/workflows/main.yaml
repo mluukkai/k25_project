@@ -104,9 +104,6 @@ jobs:
         id: set-dir
         run: echo "DIR=${{ github.ref_type == 'tag' && 'overlays/prod/' || 'overlays/staging/' }}" >> $GITHUB_ENV
 
-      - name: print w
-        run: echo "dir=${{ env.DIR }}"
-
       - name: Set images
         working-directory: ${{ env.DIR }}
         run: |-
@@ -123,6 +120,13 @@ jobs:
 
       - name: commit production kustomization.yaml to GitHub on
         if: github.ref_type == 'tag'
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: '${{ env.DIR }}/kustomization.yaml'
+          message: New version released ${{ github.sha }}
+
+      - name: commit staging kustomization.yaml to GitHub on
+        if: github.ref_type != 'tag'
         uses: EndBug/add-and-commit@v9
         with:
           add: '${{ env.DIR }}/kustomization.yaml'
