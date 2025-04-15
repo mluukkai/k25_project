@@ -77,12 +77,6 @@ jobs:
       #     docker build --tag $BROADCASTER_IMAGE_TAG todo-broadcaster
       #     docker push $BROADCASTER_IMAGE_TAG
 
-      # - name: commit kustomization.yaml to GitHub
-      #   uses: EndBug/add-and-commit@v9
-      #   with:
-      #     add: 'overlays/prod/kustomization.yaml'
-      #     message: New version released ${{ github.sha }}
-
   kustomise:
     name: Kustomize and commit
     runs-on: ubuntu-latest
@@ -106,10 +100,16 @@ jobs:
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v2.1.0
 
+      - name: Set working directory
+        id: set-dir
+        run: echo "DIR=${{ github.ref_type == 'tag' && 'overlays/prod/' || 'overlays/staging/' }}" >> $GITHUB_ENV
+
+      - name: print w
+        run: echo "dir=${{ env.DIR }}"
+
       - name: Set images
-        working-directory: overlays/prod/
+        working-directory: ${{ env.DIR }}
         run: |-
-          ls -a
           kustomize edit set image TODO-APP=$APP_IMAGE_TAG
           kustomize edit set image TODO-BACKEND=$BACKEND_IMAGE_TAG
           kustomize edit set image WIKIPEDIA=$WIKI_IMAGE_TAG
@@ -118,6 +118,12 @@ jobs:
 
       - name: debug
         run: |-
-          echo "HELLO JOB"
           git status
           git diff
+
+      - name: commit production kustomization.yaml to GitHub on
+        if: github.ref_type == 'tag'
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: '${{ env.DIR }}/kustomization.yaml'
+          message: New version released ${{ github.sha }}

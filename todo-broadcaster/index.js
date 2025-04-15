@@ -26,7 +26,7 @@ const main =  async () => {
         .setURL('https://devopswithkubernetes.com/')
         .setTimestamp();
         
-        if (ENVIRONMENT === 'prod') {
+        if (ENVIRONMENT === 'production') {
           await hook.send(embed);
           console.log('should broadcast', object, ENVIRONMENT)
         } else {
