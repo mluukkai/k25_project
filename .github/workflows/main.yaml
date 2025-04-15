@@ -10,6 +10,7 @@ env:
   REGISTRY:     europe-north1-docker.pkg.dev
   REPOSITORY:   my-repository
   APP:          project-todo-app
+  APP_IMAGE_TAG: ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.APP }}:${{ env.BRANCH }}-${{ github.sha }}
   BACKEND:      project-todo-backend
   WIKI:         project-todo-wikipedia
   BROADCASTER:  project-todo-broadcaster
@@ -57,43 +58,25 @@ jobs:
           docker build --tag $APP_IMAGE_TAG todo-app
           docker push $APP_IMAGE_TAG
       
-      - name : 'Build and push todo-backend'
-        run: |
-          docker build --tag $BACKEND_IMAGE_TAG todo-backend
-          docker push $BACKEND_IMAGE_TAG
+      # - name : 'Build and push todo-backend'
+      #   run: |
+      #     docker build --tag $BACKEND_IMAGE_TAG todo-backend
+      #     docker push $BACKEND_IMAGE_TAG
 
-      - name : 'Build and push todo-wikipedia'
-        run: |
-          docker build --tag $WIKI_IMAGE_TAG wikipedia
-          docker push $WIKI_IMAGE_TAG
+      # - name : 'Build and push todo-wikipedia'
+      #   run: |
+      #     docker build --tag $WIKI_IMAGE_TAG wikipedia
+      #     docker push $WIKI_IMAGE_TAG
 
-      - name : 'Build and push todo-backup'
-        run: |
-          docker build --tag $BACKUP_IMAGE_TAG backup
-          docker push $BACKUP_IMAGE_TAG
+      # - name : 'Build and push todo-backup'
+      #   run: |
+      #     docker build --tag $BACKUP_IMAGE_TAG backup
+      #     docker push $BACKUP_IMAGE_TAG
 
-      - name : 'Build and push todo-broadcaster'
-        run: |
-          docker build --tag $BROADCASTER_IMAGE_TAG todo-broadcaster
-          docker push $BROADCASTER_IMAGE_TAG
-
-      - name: Set up Kustomize
-        uses: imranismail/setup-kustomize@v2.1.0
-  
-      - name: Set images
-        working-directory: overlays/prod/
-        run: |-
-          ls -a
-          kustomize edit set image TODO-APP=$APP_IMAGE_TAG
-          kustomize edit set image TODO-BACKEND=$BACKEND_IMAGE_TAG
-          kustomize edit set image WIKIPEDIA=$WIKI_IMAGE_TAG
-          kustomize edit set image BACKUP=$BACKUP_IMAGE_TAG
-          kustomize edit set image TODO-BROADCASTER=$BROADCASTER_IMAGE_TAG
-
-      - name: debug
-        run: |-
-          git status
-          git diff
+      # - name : 'Build and push todo-broadcaster'
+      #   run: |
+      #     docker build --tag $BROADCASTER_IMAGE_TAG todo-broadcaster
+      #     docker push $BROADCASTER_IMAGE_TAG
 
       # - name: commit kustomization.yaml to GitHub
       #   uses: EndBug/add-and-commit@v9
@@ -102,13 +85,31 @@ jobs:
       #     message: New version released ${{ github.sha }}
 
   kustomise:
-    name: Build images
+    name: Kustomize and commit
     runs-on: ubuntu-latest
     needs: [build-images]
     
     steps:
+      - name: Set up Kustomize
+        uses: imranismail/setup-kustomize@v2.1.0
+  
       - name: debug
         run: |-
           echo "HELLO JOB"
-          git status
-          git diff
+          echo APP_IMAGE_TAG$
+
+      # - name: Set images
+      #   working-directory: overlays/prod/
+      #   run: |-
+      #     ls -a
+      #     kustomize edit set image TODO-APP=$APP_IMAGE_TAG
+      #     kustomize edit set image TODO-BACKEND=$BACKEND_IMAGE_TAG
+      #     kustomize edit set image WIKIPEDIA=$WIKI_IMAGE_TAG
+      #     kustomize edit set image BACKUP=$BACKUP_IMAGE_TAG
+      #     kustomize edit set image TODO-BROADCASTER=$BROADCASTER_IMAGE_TAG
+
+      # - name: debug
+      #   run: |-
+      #     echo "HELLO JOB"
+      #     git status
+      #     git diff
