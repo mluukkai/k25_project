@@ -98,10 +98,6 @@ jobs:
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
-
-      - name: debug 1
-        run: |-
-            ls -la
      
       - name : 'Tag names'
         run: |
@@ -127,11 +123,6 @@ jobs:
           kustomize edit set image BACKUP=$BACKUP_IMAGE_TAG
           kustomize edit set image TODO-BROADCASTER=$BROADCASTER_IMAGE_TAG
 
-      - name: debug
-        run: |-
-          git status
-          git diff
-
       - name: commit production kustomization.yaml to GitHub 
         run: | 
           git add '${{ env.DIR }}/kustomization.yaml'
@@ -141,17 +132,3 @@ jobs:
       - name: commit production kustomization.yaml to GitHub 
         run: | 
           git push origin main
-
-      # - name: commit production kustomization.yaml to GitHub on
-      #   if: github.ref_type == 'tag'
-      #   uses: EndBug/add-and-commit@v9
-      #   with:
-      #     add: '${{ env.DIR }}/kustomization.yaml'
-      #     message: New version released ${{ github.sha }}
-
-      # - name: commit staging kustomization.yaml to GitHub on
-      #   if: github.ref_type != 'tag'
-      #   uses: EndBug/add-and-commit@v9
-      #   with:
-      #     add: '${{ env.DIR }}/kustomization.yaml'
-      #     message: New version released ${{ github.sha }}
